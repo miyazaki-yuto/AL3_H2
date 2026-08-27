@@ -5,6 +5,9 @@
 #include "PlayerExplosionEffect.hlsli"
 #include "PraiseHitEffect.hlsli"
 #include "DashEnergyEffect.hlsli"
+#include "BossSonicBoomEffect.hlsli"
+#include "BossGroundSpearWarningEffect.hlsli"
+#include "BeamImpactEffect.hlsli"
 
 SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 
@@ -14,6 +17,16 @@ float4 main(VSOutput input) : SV_TARGET {
 	    input.uv.x * m_uv_scale.x + m_uv_offset.x, input.uv.y * m_uv_scale.y + m_uv_offset.y);
 	// テクスチャマッピング
 	Texture2D tex = ResourceDescriptorHeap[m_textureDescriptorIndex];
+	if (color.a > 16.5f) {
+		return ApplyBeamImpactEffect(uv, color.a - 17.0f, color);
+	}
+	if (color.a > 14.5f) {
+		return ApplyBossGroundSpearWarningEffect(
+			uv, saturate(color.a - 15.0f), color);
+	}
+	if (color.a > 12.5f) {
+		return ApplyBossSonicBoomEffect(uv, saturate(color.a - 13.0f), color);
+	}
 	if (color.a > 10.5f) {
 		return ApplyDashEnergyEffect(tex, smp, uv, color.a - 11.0f, true);
 	}

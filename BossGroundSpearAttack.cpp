@@ -22,10 +22,11 @@ void BossGroundSpearAttack::Initialize(
 	for (Spear& spear : spears_) {
 		spear.spearTransform.Initialize();
 		spear.predictionTransform.Initialize();
+		spear.predictionColor.Initialize();
+		// alpha=15..16は地面槍予兆シェーダーと進行度のマーカー。
+		spear.predictionColor.SetColor({1.0f, 0.12f, 0.015f, 15.0f});
 		spear.state = SpearState::Dormant;
 	}
-	predictionColor_.Initialize();
-	predictionColor_.SetColor({1.0f, 0.8f, 0.1f, 0.75f});
 	nextSpearIndex_ = 0;
 	nextSpearTimer_ = -1;
 	isActive_ = false;
@@ -158,7 +159,7 @@ void BossGroundSpearAttack::Draw() {
 	for (const Spear& spear : spears_) {
 		if (spear.state == SpearState::Warning && predictionCircleModel_ != nullptr) {
 			predictionCircleModel_->Draw(
-			    spear.predictionTransform, *camera_, &predictionColor_);
+			    spear.predictionTransform, *camera_, &spear.predictionColor);
 		} else if (
 		    (spear.state == SpearState::Rising || spear.state == SpearState::Active ||
 		     spear.state == SpearState::Retracting) &&
@@ -326,6 +327,8 @@ void BossGroundSpearAttack::UpdatePredictionTransform(
 	    LerpManager::EaseType::SmootherStep);
 	spear.predictionTransform.scale_ = {displayRadius, 1.0f, displayRadius};
 	UpdateWorldTransform(spear.predictionTransform);
+	spear.predictionColor.SetColor(
+	    {1.0f, 0.10f, 0.01f, 15.0f + std::clamp(warningProgress, 0.0f, 0.999f)});
 }
 
 void BossGroundSpearAttack::UpdateSpearTransform(Spear& spear, float riseProgress) {

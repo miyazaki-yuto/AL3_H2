@@ -215,6 +215,7 @@ private:
 	void UpdateBeamTransformToTipDistance(
 	    const KamataEngine::Vector3& beamOrigin,
 	    float tipDistance);
+	void UpdateBeamImpactTransform();
 	void BeginBeamExtension();
 	void UpdateBeamExtensionTransform();
 	void UpdateBeamRetractionTransform(BeamRetraction& beamRetraction) const;
@@ -235,6 +236,7 @@ private:
 	KamataEngine::Model* predictionModel_ = nullptr;
 	KamataEngine::ObjectColor predictionColor_;
 	KamataEngine::ObjectColor beamColor_;
+	KamataEngine::ObjectColor beamImpactColor_;
 	uint32_t slashSeHandle_ = 0;
 	uint32_t beamShotSeHandle_ = 0;
 	uint32_t bulletShotSeHandle_ = 0;
@@ -270,6 +272,7 @@ private:
 	KamataEngine::WorldTransform slashTransform_;
 	KamataEngine::WorldTransform slashVisualTransform_;
 	KamataEngine::WorldTransform beamTransform_;
+	KamataEngine::WorldTransform beamImpactTransform_;
 	KamataEngine::Vector3 slashOrigin_ = {0.0f, 0.0f, 0.0f};
 	int bulletCooldownTimer_ = 0;
 	int bulletCooldownDuration_ = 0;

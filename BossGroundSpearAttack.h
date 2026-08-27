@@ -62,6 +62,7 @@ private:
 	struct Spear {
 		KamataEngine::WorldTransform spearTransform;
 		KamataEngine::WorldTransform predictionTransform;
+		KamataEngine::ObjectColor predictionColor;
 		KamataEngine::Vector3 groundPosition = {};
 		SpearState state = SpearState::Dormant;
 		int stateTimer = 0;
@@ -80,7 +81,6 @@ private:
 	KamataEngine::Camera* camera_ = nullptr;
 	Player* player_ = nullptr;
 	std::array<Spear, kSpearCount> spears_;
-	KamataEngine::ObjectColor predictionColor_;
 	float groundHeight_ = 0.0f;
 	size_t nextSpearIndex_ = 0;
 	int nextSpearTimer_ = -1;

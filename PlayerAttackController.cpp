@@ -53,6 +53,8 @@ void PlayerAttackController::Initialize(
 	beamColor_.Initialize();
 	// alpha=3はObjPSでPlayerビーム専用HLSLを選択するマーカー。
 	beamColor_.SetColor({0.0f, 0.82f, 1.0f, 3.0f});
+	beamImpactColor_.Initialize();
+	beamImpactColor_.SetColor({0.0f, 0.82f, 1.0f, 17.0f});
 	mainSkill_ = MainSkillType::Bullet;
 	subSkillController_.SetSubSkills({SubSkillType::None, SubSkillType::None});
 	bullets_.clear();
@@ -65,6 +67,7 @@ void PlayerAttackController::Initialize(
 	slashTransform_.Initialize();
 	slashVisualTransform_.Initialize();
 	beamTransform_.Initialize();
+	beamImpactTransform_.Initialize();
 	bulletCooldownTimer_ = 0;
 	bulletAttackLockTimer_ = 0;
 	slashTimer_ = 0;
@@ -267,6 +270,8 @@ void PlayerAttackController::Update() {
 	if (steelBurstBuffTimer_ > 0) --steelBurstBuffTimer_;
 	++elapsedGameFrames_;
 	beamEffectTime_ += 1.0f / 60.0f;
+	beamImpactColor_.SetColor(
+	    {0.0f, 0.82f, 1.0f, 17.0f + std::fmod(beamEffectTime_, 0.999f)});
 	// PlayerBeam専用モデルのUV-offset ZをHLSLの時間入力として使用する。
 	if (beamModel_ != nullptr) {
 		for (const auto& mesh : beamModel_->GetMeshes()) {
@@ -837,6 +842,9 @@ void PlayerAttackController::Draw(const Camera& camera) const {
 		beamModel_->Draw(beamTransform_, camera, &beamColor_);
 		for (const auto& beamSegment : reflectedBeamSegments_) {
 			beamModel_->Draw(beamSegment->worldTransform, camera, &beamColor_);
+		}
+		if (predictionModel_ != nullptr) {
+			predictionModel_->Draw(beamImpactTransform_, camera, &beamImpactColor_);
 		}
 	}
 	for (const auto& beamRetraction : beamRetractions_) {
@@ -1960,6 +1968,7 @@ void PlayerAttackController::UpdateBeamTransformToTipDistance(
 	    beamOrigin.z + beamDirection_.z * centerOffset,
 	};
 	UpdateWorldTransform(beamTransform_);
+	UpdateBeamImpactTransform();
 }
 
 void PlayerAttackController::BeginBeamExtension() {
@@ -1984,6 +1993,23 @@ void PlayerAttackController::UpdateBeamExtensionTransform() {
 	    beamOrigin_.z + beamDirection_.z * (beamStartOffset_ + currentLength),
 	};
 	UpdateWorldTransform(beamTransform_);
+	UpdateBeamImpactTransform();
+}
+
+void PlayerAttackController::UpdateBeamImpactTransform() {
+	const float impactRadius = (std::max)(5.5f, beamWidth_ * 3.0f);
+	beamImpactTransform_.scale_ = {impactRadius, 1.0f, impactRadius};
+	// PredictionCircleの水平面を起こし、ビームと直交する断面として先端へ密着させる。
+	beamImpactTransform_.rotation_ = {
+	    std::numbers::pi_v<float> * 0.5f,
+	    std::atan2(beamDirection_.x, beamDirection_.z),
+	    0.0f};
+	beamImpactTransform_.translation_ = {
+	    beamTransform_.translation_.x + beamDirection_.x * beamTransform_.scale_.z,
+	    beamTransform_.translation_.y,
+	    beamTransform_.translation_.z + beamDirection_.z * beamTransform_.scale_.z,
+	};
+	UpdateWorldTransform(beamImpactTransform_);
 }
 
 void PlayerAttackController::UpdateBeamRetractionTransform(BeamRetraction& beamRetraction) const {

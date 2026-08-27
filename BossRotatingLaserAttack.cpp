@@ -35,8 +35,10 @@ void BossRotatingLaserAttack::StopAllSounds() {
 	}
 }
 
-void BossRotatingLaserAttack::Initialize(Model* laserModel, Camera* camera, Player* player) {
+void BossRotatingLaserAttack::Initialize(
+    Model* laserModel, Model* sonicBoomModel, Camera* camera, Player* player) {
 	laserModel_ = laserModel;
+	sonicBoomModel_ = sonicBoomModel;
 	camera_ = camera;
 	player_ = player;
 	chargeStartSeHandle_ = Audio::GetInstance()->LoadWave("Audio/Game_PlayerCharge_SE.wav");
@@ -47,10 +49,25 @@ void BossRotatingLaserAttack::Initialize(Model* laserModel, Camera* camera, Play
 	for (WorldTransform& transform : laserTransforms_) {
 		transform.Initialize();
 	}
+	for (WorldTransform& transform : beamImpactTransforms_) {
+		transform.Initialize();
+	}
 	laserColor_.Initialize();
 	// alpha=2はObjPSでBossビーム専用HLSLを選択するためのマーカー。
 	laserColor_.SetColor({1.0f, 0.75f, 0.05f, 2.0f});
+	beamImpactColor_.Initialize();
+	beamImpactColor_.SetColor({1.0f, 0.04f, 0.01f, 17.0f});
+	for (SonicBoom& boom : sonicBooms_) {
+		boom.transform.Initialize();
+		boom.color.Initialize();
+		boom.active = false;
+	}
+	sonicBoomSpawnTimer_ = 0;
 	beamEffectTime_ = 0.0f;
+	sonicBoomSpawnTimer_ = 0;
+	for (SonicBoom& boom : sonicBooms_) {
+		boom.active = false;
+	}
 	isActive_ = false;
 	isWarning_ = false;
 	pendingBossHealAmount_ = 0;
@@ -84,6 +101,9 @@ void BossRotatingLaserAttack::Update(
 		return;
 	}
 	beamEffectTime_ += 1.0f / 60.0f;
+	beamImpactColor_.SetColor(
+	    {1.0f, 0.04f, 0.01f, 17.0f + std::fmod(beamEffectTime_, 0.999f)});
+	UpdateSonicBooms(bossWorldTransform.translation_);
 	// Materialの未使用UV-offset Z成分を専用HLSLの時間入力にする。
 	// BossBeam専用モデルなので、他のOBJのUVには影響しない。
 	if (laserModel_ != nullptr) {
@@ -123,6 +143,7 @@ void BossRotatingLaserAttack::Update(
 			isBeamLoopPlaying_ = true;
 			isWarning_ = false;
 			remainingFrames_ = kLaserFrames;
+			sonicBoomSpawnTimer_ = 0;
 			laserColor_.SetColor({1.0f, 0.15f, 0.05f, 2.0f});
 		}
 		return;
@@ -169,6 +190,55 @@ void BossRotatingLaserAttack::Draw() {
 	for (const WorldTransform& transform : laserTransforms_) {
 		laserModel_->Draw(transform, *camera_, &laserColor_);
 	}
+	if (!isWarning_ && sonicBoomModel_ != nullptr) {
+		for (const WorldTransform& impactTransform : beamImpactTransforms_) {
+			sonicBoomModel_->Draw(impactTransform, *camera_, &beamImpactColor_);
+		}
+		for (const SonicBoom& boom : sonicBooms_) {
+			if (boom.active) {
+				sonicBoomModel_->Draw(boom.transform, *camera_, &boom.color);
+			}
+		}
+	}
+}
+
+void BossRotatingLaserAttack::UpdateSonicBooms(const Vector3& bossPosition) {
+	for (SonicBoom& boom : sonicBooms_) {
+		if (!boom.active) continue;
+		--boom.remainingFrames;
+		if (boom.remainingFrames <= 0) {
+			boom.active = false;
+			continue;
+		}
+		const float progress = 1.0f - static_cast<float>(boom.remainingFrames) /
+		    static_cast<float>(kSonicBoomLifetimeFrames);
+		const float eased = 1.0f - (1.0f - progress) * (1.0f - progress);
+		const float radius = 6.0f + eased * 30.0f;
+		boom.transform.scale_ = {radius, 1.0f, radius};
+		boom.transform.translation_ = {bossPosition.x, bossPosition.y + 0.35f, bossPosition.z};
+		UpdateWorldTransform(boom.transform);
+		// alpha=13..14 はObjPSでソニックブームを選び、端数を寿命として渡す。
+		boom.color.SetColor({1.0f, 0.06f, 0.015f, 13.0f + progress});
+	}
+	if (isWarning_) return;
+	if (sonicBoomSpawnTimer_-- <= 0) {
+		SpawnSonicBoom(bossPosition);
+		sonicBoomSpawnTimer_ = kSonicBoomIntervalFrames;
+	}
+}
+
+void BossRotatingLaserAttack::SpawnSonicBoom(const Vector3& bossPosition) {
+	for (SonicBoom& boom : sonicBooms_) {
+		if (boom.active) continue;
+		boom.active = true;
+		boom.remainingFrames = kSonicBoomLifetimeFrames;
+		boom.transform.scale_ = {6.0f, 1.0f, 6.0f};
+		boom.transform.rotation_ = {0.0f, rotationY_, 0.0f};
+		boom.transform.translation_ = {bossPosition.x, bossPosition.y + 0.35f, bossPosition.z};
+		UpdateWorldTransform(boom.transform);
+		boom.color.SetColor({1.0f, 0.06f, 0.015f, 13.0f});
+		return;
+	}
 }
 
 void BossRotatingLaserAttack::UpdateLaserTransform(
@@ -193,6 +263,16 @@ void BossRotatingLaserAttack::UpdateLaserTransform(
 	    (start.z + end.z) * 0.5f,
 	};
 	UpdateWorldTransform(transform);
+	WorldTransform& impactTransform = beamImpactTransforms_[index];
+	const float impactRadius = (std::max)(8.0f, laserRadius * 1.65f);
+	impactTransform.scale_ = {impactRadius, 1.0f, impactRadius};
+	// 水平な予測円を縦へ起こし、4本それぞれのビーム先端断面へ向ける。
+	impactTransform.rotation_ = {
+	    std::numbers::pi_v<float> * 0.5f,
+	    rotationY,
+	    0.0f};
+	impactTransform.translation_ = {end.x, end.y, end.z};
+	UpdateWorldTransform(impactTransform);
 }
 
 void BossRotatingLaserAttack::CheckPlayerCollision(const Vector3& start, const Vector3& end) {

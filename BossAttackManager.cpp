@@ -19,7 +19,7 @@ void BossAttackManager::Initialize(
     Player* player) {
 	player_ = player;
 	gapShockWaveAttack_.Initialize(bulletModel, camera, player);
-	rotatingLaserAttack_.Initialize(laserModel, camera, player);
+	rotatingLaserAttack_.Initialize(laserModel, predictionCircleModel, camera, player);
 	closeExplosionAttack_.Initialize(predictionCircleModel, camera, player);
 	groundSpearAttack_.Initialize(groundSpearModel, predictionCircleModel, camera, player);
 	summonMobsAttack_.Initialize(

@@ -11,7 +11,9 @@ class Player;
 class BossRotatingLaserAttack final {
 public:
 	~BossRotatingLaserAttack();
-	void Initialize(KamataEngine::Model* laserModel, KamataEngine::Camera* camera, Player* player);
+	void Initialize(
+	    KamataEngine::Model* laserModel, KamataEngine::Model* sonicBoomModel,
+	    KamataEngine::Camera* camera, Player* player);
 	void Start(const KamataEngine::WorldTransform& bossWorldTransform);
 	void Update(
 	    KamataEngine::WorldTransform& bossWorldTransform,
@@ -41,13 +43,26 @@ private:
 	    float rotationY);
 	void CheckPlayerCollision(
 	    const KamataEngine::Vector3& start, const KamataEngine::Vector3& end);
+	void UpdateSonicBooms(const KamataEngine::Vector3& bossPosition);
+	void SpawnSonicBoom(const KamataEngine::Vector3& bossPosition);
 	KamataEngine::Vector3 GetArenaEdge(const KamataEngine::Vector3& start, float angle) const;
 
 	KamataEngine::Model* laserModel_ = nullptr;
+	KamataEngine::Model* sonicBoomModel_ = nullptr;
 	KamataEngine::Camera* camera_ = nullptr;
 	Player* player_ = nullptr;
 	std::array<KamataEngine::WorldTransform, 4> laserTransforms_;
+	std::array<KamataEngine::WorldTransform, 4> beamImpactTransforms_;
 	KamataEngine::ObjectColor laserColor_;
+	KamataEngine::ObjectColor beamImpactColor_;
+	struct SonicBoom {
+		KamataEngine::WorldTransform transform;
+		KamataEngine::ObjectColor color;
+		int remainingFrames = 0;
+		bool active = false;
+	};
+	std::array<SonicBoom, 8> sonicBooms_;
+	int sonicBoomSpawnTimer_ = 0;
 	float startRotationY_ = 0.0f;
 	float rotationY_ = 0.0f;
 	int warningTimer_ = 0;
@@ -81,4 +96,6 @@ private:
 	inline static constexpr float kLaserRadius = 8.0f;
 	inline static constexpr int kDamage = 15;
 	inline static constexpr int kBossHealPerHit = 15;
+	inline static constexpr int kSonicBoomIntervalFrames = 24;
+	inline static constexpr int kSonicBoomLifetimeFrames = 42;
 };
