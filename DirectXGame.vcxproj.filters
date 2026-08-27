@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{0bd04e42-1278-495d-acc3-0d679f65a08d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene">
+      <UniqueIdentifier>{0de0e491-4ae9-4d8a-88a9-157e0a26bbb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Field">
+      <UniqueIdentifier>{04e76a8b-9e7b-4066-bcd5-92cd92584095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Field">
+      <UniqueIdentifier>{68e2e93c-e5fd-47f1-a23a-a6d02a302001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameObject">
+      <UniqueIdentifier>{ab5e2de8-2d6b-41be-b626-cfb1d4f75e35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameObject\Boss">
+      <UniqueIdentifier>{7e982008-a655-4f1b-860d-b73d92ad223b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GameObject">
+      <UniqueIdentifier>{51756f10-c6ec-4264-822b-63c50779c7ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GameObject\Boss">
+      <UniqueIdentifier>{c7f6d30f-1df5-485a-b1e0-29cb476aa29f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformUtility.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClear.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTitle.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>ソース ファイル\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="LerpManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAttackController.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossChargeAttack.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossCloseExplosionAttack.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossGapShockWaveAttack.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossGroundSpearAttack.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossRotatingLaserAttack.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossSummonMobs.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>ソース ファイル\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="BossAttackManager.cpp">
+      <Filter>ソース ファイル\GameObject\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusEffectManager.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SubSkillController.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+	<ClCompile Include="ExplanationScene.cpp">
+	  <Filter>ソース ファイル\Scene</Filter>
+	</ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformUtility.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClear.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTitle.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>ヘッダー ファイル\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="LerpManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossChargeAttack.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossCloseExplosionAttack.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossGapShockWaveAttack.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossGroundSpearAttack.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossRotatingLaserAttack.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossSummonMobs.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAttackController.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>ヘッダー ファイル\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="BossAttackManager.h">
+      <Filter>ヘッダー ファイル\GameObject\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusEffectManager.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SubSkillController.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+	<ClInclude Include="ExplanationScene.h">
+	  <Filter>ヘッダー ファイル\Scene</Filter>
+	</ClInclude>
+  </ItemGroup>
+</Project>
